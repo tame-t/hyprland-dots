@@ -1,0 +1,218 @@
+14:57:13.869: Platform: Wayland
+14:57:13.870: CPU Name: Intel(R) Core(TM) i5-8350U CPU @ 1.70GHz
+14:57:13.870: CPU Speed: 3600.116MHz
+14:57:13.870: Physical Cores: 4, Logical Cores: 8
+14:57:13.870: Physical Memory: 7676MB Total, 3617MB Free
+14:57:13.870: Kernel Version: Linux 6.19.12-arch1-1
+14:57:13.870: Distribution: "Arch Linux" Unknown
+14:57:13.870: Desktop Environment: Hyprland (Hyprland)
+14:57:13.870: Session Type: wayland
+14:57:13.872: Current Date/Time: 2026-04-22, 02:57:13 PM
+14:57:13.872: Browser Hardware Acceleration: true
+14:57:13.872: Qt Version: 6.11.0 (runtime), 6.11.0 (compiled)
+14:57:13.872: Portable mode: false
+14:57:14.147: OBS 32.1.1 (linux)
+14:57:14.147: ---------------------------------
+14:57:14.149: ---------------------------------
+14:57:14.149: audio settings reset:
+14:57:14.149: 	samples per sec: 48000
+14:57:14.149: 	speakers:        2
+14:57:14.149: 	max buffering:   960 milliseconds
+14:57:14.149: 	buffering type:  dynamically increasing
+14:57:14.152: ---------------------------------
+14:57:14.152: Initializing OpenGL...
+14:57:14.152: Using EGL/Wayland
+14:57:14.199: Initialized EGL 1.5
+14:57:14.216: Loading up OpenGL on adapter Intel Mesa Intel(R) UHD Graphics 620 (KBL GT2)
+14:57:14.216: OpenGL loaded successfully, version 4.6 (Core Profile) Mesa 26.0.5-arch1.1, shading language 4.60
+14:57:14.358: ---------------------------------
+14:57:14.358: video settings reset:
+14:57:14.358: 	base resolution:   1920x1080
+14:57:14.358: 	output resolution: 852x480
+14:57:14.358: 	downscale filter:  Bicubic
+14:57:14.358: 	fps:               30/1
+14:57:14.358: 	format:            NV12
+14:57:14.358: 	YUV mode:          Rec. 709/Partial
+14:57:14.358: NV12 texture support enabled
+14:57:14.358: P010 texture support not available
+14:57:14.365: Audio monitoring device:
+14:57:14.365: 	name: Default
+14:57:14.365: 	id: default
+14:57:14.368: ---------------------------------
+14:57:14.370: Failed to load 'en-US' text for module: 'decklink-captions.so'
+14:57:14.372: Failed to load 'en-US' text for module: 'decklink-output-ui.so'
+14:57:14.375: A DeckLink iterator could not be created.  The DeckLink drivers may not be installed
+14:57:14.375: Failed to initialize module 'decklink.so'
+14:57:14.527: [pipewire] Available capture sources:
+14:57:14.527: [pipewire]     - Monitor source
+14:57:14.527: [pipewire]     - Window source
+14:57:14.536: v4l2loopback not installed, virtual camera not registered
+14:57:14.616: [obs-browser]: Version 2.26.8
+14:57:14.616: [obs-browser]: CEF Version 146.0.7680.179 (runtime), 146.0.11+g3a0fcf1+chromium-146.0.7680.179 (compiled)
+14:57:14.652: VAAPI: Failed to initialize display in vaapi_device_h264_supported
+14:57:14.652: FFmpeg VAAPI H264 encoding not supported
+14:57:14.653: VAAPI: Failed to initialize display in vaapi_device_av1_supported
+14:57:14.653: FFmpeg VAAPI AV1 encoding not supported
+14:57:14.653: VAAPI: Failed to initialize display in vaapi_device_hevc_supported
+14:57:14.653: FFmpeg VAAPI HEVC encoding not supported
+14:57:14.660: os_dlopen(libnvidia-encode.so.1->libnvidia-encode.so.1): libnvidia-encode.so.1: cannot open shared object file: No such file or directory
+14:57:14.660: 
+14:57:14.660: NVENC not supported
+14:57:14.660: Failed to initialize module 'obs-nvenc.so'
+14:57:14.689: [obs-websocket] [obs_module_load] you can haz websockets (Version: 5.7.3 | RPC Version: 1)
+14:57:14.689: [obs-websocket] [obs_module_load] Qt version (compile-time): 6.11.0 | Qt version (run-time): 6.11.0
+14:57:14.689: [obs-websocket] [obs_module_load] Linked ASIO Version: 103800
+14:57:14.699: [obs-websocket] [obs_module_load] Module loaded.
+14:57:14.705: ---------------------------------
+14:57:14.705:   Loaded Modules:
+14:57:14.705:     text-freetype2.so
+14:57:14.705:     rtmp-services.so
+14:57:14.705:     obs-x264.so
+14:57:14.705:     obs-websocket.so
+14:57:14.705:     obs-webrtc.so
+14:57:14.705:     obs-vst.so
+14:57:14.705:     obs-transitions.so
+14:57:14.705:     obs-qsv11.so
+14:57:14.705:     obs-outputs.so
+14:57:14.705:     obs-libfdk.so
+14:57:14.705:     obs-filters.so
+14:57:14.705:     obs-ffmpeg.so
+14:57:14.705:     obs-browser.so
+14:57:14.705:     linux-v4l2.so
+14:57:14.705:     linux-pulseaudio.so
+14:57:14.705:     linux-pipewire.so
+14:57:14.705:     linux-jack.so
+14:57:14.705:     linux-capture.so
+14:57:14.705:     linux-alsa.so
+14:57:14.705:     image-source.so
+14:57:14.705:     frontend-tools.so
+14:57:14.705:     decklink-output-ui.so
+14:57:14.705:     decklink-captions.so
+14:57:14.705: ---------------------------------
+14:57:14.705: ---------------------------------
+14:57:14.705: Available Encoders:
+14:57:14.705:   Video Encoders:
+14:57:14.705: 	- ffmpeg_svt_av1 (SVT-AV1)
+14:57:14.705: 	- ffmpeg_aom_av1 (AOM AV1)
+14:57:14.705: 	- obs_x264 (x264)
+14:57:14.705:   Audio Encoders:
+14:57:14.705: 	- ffmpeg_aac (FFmpeg AAC)
+14:57:14.705: 	- ffmpeg_opus (FFmpeg Opus)
+14:57:14.705: 	- ffmpeg_pcm_s16le (FFmpeg PCM (16-bit))
+14:57:14.705: 	- ffmpeg_pcm_s24le (FFmpeg PCM (24-bit))
+14:57:14.705: 	- ffmpeg_pcm_f32le (FFmpeg PCM (32-bit float))
+14:57:14.705: 	- ffmpeg_alac (FFmpeg ALAC (24-bit))
+14:57:14.705: 	- ffmpeg_flac (FFmpeg FLAC (16-bit))
+14:57:14.705: 	- libfdk_aac (libfdk AAC)
+14:57:14.705: ==== Startup complete ===============================================
+14:57:14.748: All scene data cleared
+14:57:14.748: ------------------------------------------------
+14:57:14.763: Device for 'Audio Output Capture' source Desktop Audio is also used for audio monitoring.
+14:57:14.763: Deduplication logic is being applied to all monitored sources.
+14:57:14.763: pulse-input: Server name: 'PulseAudio (on PipeWire 1.6.3) 15.0.0'
+14:57:14.763: pulse-input: Audio format: s32le, 48000 Hz, 2 channels
+14:57:14.763: pulse-input: Started recording from 'alsa_output.pci-0000_00_1f.3.analog-stereo.monitor' (default)
+14:57:14.763: [Loaded global audio device]: 'Desktop Audio'
+14:57:14.764: pulse-input: Server name: 'PulseAudio (on PipeWire 1.6.3) 15.0.0'
+14:57:14.764: pulse-input: Audio format: s32le, 48000 Hz, 2 channels
+14:57:14.764: pulse-input: Started recording from 'alsa_input.pci-0000_00_1f.3.analog-stereo' (default)
+14:57:14.764: [Loaded global audio device]: 'Mic/Aux'
+14:57:14.764: PipeWire initialized
+14:57:14.765: pulse-input: Server name: 'PulseAudio (on PipeWire 1.6.3) 15.0.0'
+14:57:14.765: pulse-input: Audio format: s32le, 48000 Hz, 2 channels
+14:57:14.765: pulse-input: Started recording from 'alsa_input.pci-0000_00_1f.3.analog-stereo' (default)
+14:57:14.766: pulse-input: Server name: 'PulseAudio (on PipeWire 1.6.3) 15.0.0'
+14:57:14.766: pulse-input: Audio format: s32le, 48000 Hz, 2 channels
+14:57:14.766: pulse-input: Started recording from 'alsa_input.pci-0000_00_1f.3.analog-stereo'
+14:57:14.768: Switched to scene 'Scene'
+14:57:14.768: ------------------------------------------------
+14:57:14.768: Loaded scenes:
+14:57:14.768: - scene 'Scene':
+14:57:14.768:     - source: 'Screen Capture (PipeWire)' (pipewire-screen-capture-source)
+14:57:14.768:     - source: 'Audio Input Capture (PulseAudio)' (pulse_input_capture)
+14:57:14.768:     - source: 'Audio Input Capture (PulseAudio) 2' (pulse_input_capture)
+14:57:14.768: ------------------------------------------------
+14:57:14.772: Device for 'Audio Output Capture' source Desktop Audio is also used for audio monitoring.
+14:57:14.772: Deduplication logic is being applied to all monitored sources.
+14:57:14.787: VolumeMeter(0x5598e8607140)  does not have a property named  "peakDecayRate"
+14:57:14.789: VolumeMeter(0x5598e8607140)  does not have a property named  "peakDecayRate"
+14:57:14.792: VolumeMeter(0x5598e8607140)  does not have a property named  "peakDecayRate"
+14:57:14.794: VolumeMeter(0x5598e79140a0)  does not have a property named  "peakDecayRate"
+14:57:14.795: VolumeMeter(0x5598e79140a0)  does not have a property named  "peakDecayRate"
+14:57:14.797: VolumeMeter(0x5598e79140a0)  does not have a property named  "peakDecayRate"
+14:57:14.798: VolumeMeter(0x5598e8545930)  does not have a property named  "peakDecayRate"
+14:57:14.799: VolumeMeter(0x5598e8545930)  does not have a property named  "peakDecayRate"
+14:57:14.801: VolumeMeter(0x5598e8545930)  does not have a property named  "peakDecayRate"
+14:57:14.802: VolumeMeter(0x5598e85755a0)  does not have a property named  "peakDecayRate"
+14:57:14.803: VolumeMeter(0x5598e85755a0)  does not have a property named  "peakDecayRate"
+14:57:14.805: VolumeMeter(0x5598e85755a0)  does not have a property named  "peakDecayRate"
+14:57:14.808: VolumeMeter(0x5598e8607140)  does not have a property named  "peakDecayRate"
+14:57:14.809: VolumeMeter(0x5598e79140a0)  does not have a property named  "peakDecayRate"
+14:57:14.811: VolumeMeter(0x5598e8545930)  does not have a property named  "peakDecayRate"
+14:57:14.812: VolumeMeter(0x5598e85755a0)  does not have a property named  "peakDecayRate"
+14:57:14.830: VolumeMeter(0x5598e8607140)  does not have a property named  "peakDecayRate"
+14:57:14.831: VolumeMeter(0x5598e8607140)  does not have a property named  "peakDecayRate"
+14:57:14.833: VolumeMeter(0x5598e79140a0)  does not have a property named  "peakDecayRate"
+14:57:14.835: VolumeMeter(0x5598e79140a0)  does not have a property named  "peakDecayRate"
+14:57:14.837: VolumeMeter(0x5598e8545930)  does not have a property named  "peakDecayRate"
+14:57:14.839: VolumeMeter(0x5598e8545930)  does not have a property named  "peakDecayRate"
+14:57:14.840: VolumeMeter(0x5598e85755a0)  does not have a property named  "peakDecayRate"
+14:57:14.842: VolumeMeter(0x5598e85755a0)  does not have a property named  "peakDecayRate"
+14:57:14.855: VolumeMeter(0x5598e8607140)  does not have a property named  "peakDecayRate"
+14:57:14.856: VolumeMeter(0x5598e79140a0)  does not have a property named  "peakDecayRate"
+14:57:14.858: VolumeMeter(0x5598e8545930)  does not have a property named  "peakDecayRate"
+14:57:14.860: VolumeMeter(0x5598e85755a0)  does not have a property named  "peakDecayRate"
+14:57:14.860: [pipewire] Screencast session created
+14:57:15.323: adding 21 milliseconds of audio buffering, total audio buffering is now 21 milliseconds (source: Desktop Audio)
+14:57:15.323: 
+14:57:15.366: adding 21 milliseconds of audio buffering, total audio buffering is now 42 milliseconds (source: Mic/Aux)
+14:57:15.366: 
+14:57:17.151: [pipewire] Asking for monitor and window
+14:57:17.161: [pipewire] source selected, setting up screencast
+14:57:17.176: [pipewire] Server version: 1.6.3
+14:57:17.176: [pipewire] Library version: 1.6.3
+14:57:17.176: [pipewire] Header version: 1.6.3
+14:57:17.176: [pipewire] Created stream 0x5598e7d2b460
+14:57:17.176: [pipewire] Stream 0x5598e7d2b460 state: "connecting" (error: none)
+14:57:17.177: [pipewire] Playing stream 0x5598e7d2b460
+14:57:17.178: [pipewire] Stream 0x5598e7d2b460 state: "paused" (error: none)
+14:57:17.197: [pipewire] Negotiated format:
+14:57:17.197: [pipewire]     Format: 12 (Spa:Enum:VideoFormat:BGRA)
+14:57:17.197: [pipewire]     Modifier: 0x0
+14:57:17.197: [pipewire]     Size: 1920x1080
+14:57:17.197: [pipewire]     Framerate: 0/1
+14:57:17.204: [pipewire] Negotiated format:
+14:57:17.204: [pipewire]     Format: 12 (Spa:Enum:VideoFormat:BGRA)
+14:57:17.204: [pipewire]     Modifier: 0x100000000000004
+14:57:17.204: [pipewire]     Size: 1920x1080
+14:57:17.204: [pipewire]     Framerate: 0/1
+14:57:17.221: [pipewire] Stream 0x5598e7d2b460 state: "streaming" (error: none)
+14:57:17.236: Cannot create EGLImage: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+14:57:17.236: [pipewire] Renegotiating stream
+14:57:17.236: [pipewire] Stream 0x5598e7d2b460 state: "paused" (error: none)
+14:57:17.236: [pipewire] Negotiated format:
+14:57:17.236: [pipewire]     Format: 12 (Spa:Enum:VideoFormat:BGRA)
+14:57:17.236: [pipewire]     Modifier: 0x100000000000004
+14:57:17.236: [pipewire]     Size: 1920x1080
+14:57:17.236: [pipewire]     Framerate: 0/1
+14:57:17.238: [pipewire] Negotiated format:
+14:57:17.238: [pipewire]     Format: 12 (Spa:Enum:VideoFormat:BGRA)
+14:57:17.238: [pipewire]     Modifier: 0x100000000000002
+14:57:17.238: [pipewire]     Size: 1920x1080
+14:57:17.238: [pipewire]     Framerate: 0/1
+14:57:17.248: [pipewire] Stream 0x5598e7d2b460 state: "streaming" (error: none)
+14:58:38.417: adding 64 milliseconds of audio buffering, total audio buffering is now 106 milliseconds (source: Audio Input Capture (PulseAudio) 2)
+14:58:38.417: 
+15:29:47.250: ==== Shutting down ==================================================
+15:29:47.478: pulse-input: Stopped recording from 'alsa_output.pci-0000_00_1f.3.analog-stereo.monitor'
+15:29:47.478: pulse-input: Got 78106 packets with 93727200 frames
+15:29:47.478: Deduplication logic stopped.
+15:29:47.479: pulse-input: Stopped recording from 'alsa_input.pci-0000_00_1f.3.analog-stereo'
+15:29:47.479: pulse-input: Got 78105 packets with 93726000 frames
+15:29:47.480: [pipewire] Stream 0x5598e7d2b460 state: "paused" (error: none)
+15:29:47.480: [pipewire] Stream 0x5598e7d2b460 state: "unconnected" (error: none)
+15:29:47.525: pulse-input: Stopped recording from 'alsa_input.pci-0000_00_1f.3.analog-stereo'
+15:29:47.529: pulse-input: Got 78106 packets with 93727200 frames
+15:29:47.530: pulse-input: Stopped recording from 'alsa_input.pci-0000_00_1f.3.analog-stereo'
+15:29:47.530: pulse-input: Got 75143 packets with 90171600 frames
+15:29:47.708: The Wayland connection broke. Did the Wayland compositor die?

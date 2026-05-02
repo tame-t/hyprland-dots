@@ -1,0 +1,11 @@
+configuration {
+    modi: "drun,run,window";
+    show-icons: true;
+    icon-theme: "Papirus-Dark";
+    drun-display-format: "{name}";
+    display-drun: " Apps";
+    display-run: " Run";
+    display-window: " Windows";
+}
+
+@theme "/home/ethan/.config/rofi/catppuccin-mocha.rasi"

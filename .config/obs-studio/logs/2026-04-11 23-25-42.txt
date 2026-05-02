@@ -1,0 +1,233 @@
+23:25:42.170: Platform: Wayland
+23:25:42.171: CPU Name: Intel(R) Core(TM) i5-8350U CPU @ 1.70GHz
+23:25:42.171: CPU Speed: 800.104MHz
+23:25:42.172: Physical Cores: 4, Logical Cores: 8
+23:25:42.172: Physical Memory: 7676MB Total, 3379MB Free
+23:25:42.172: Kernel Version: Linux 6.19.11-arch1-1
+23:25:42.172: Distribution: "Arch Linux" Unknown
+23:25:42.173: Desktop Environment: Hyprland (Hyprland)
+23:25:42.173: Session Type: wayland
+23:25:42.179: Current Date/Time: 2026-04-11, 11:25:42 PM
+23:25:42.179: Browser Hardware Acceleration: true
+23:25:42.179: Qt Version: 6.11.0 (runtime), 6.11.0 (compiled)
+23:25:42.179: Portable mode: false
+23:25:42.416: OBS 32.1.1 (linux)
+23:25:42.416: ---------------------------------
+23:25:42.420: ---------------------------------
+23:25:42.420: audio settings reset:
+23:25:42.420: 	samples per sec: 48000
+23:25:42.420: 	speakers:        2
+23:25:42.420: 	max buffering:   960 milliseconds
+23:25:42.420: 	buffering type:  dynamically increasing
+23:25:42.427: ---------------------------------
+23:25:42.428: Initializing OpenGL...
+23:25:42.428: Using EGL/Wayland
+23:25:42.686: Initialized EGL 1.5
+23:25:42.769: Loading up OpenGL on adapter Intel Mesa Intel(R) UHD Graphics 620 (KBL GT2)
+23:25:42.769: OpenGL loaded successfully, version 4.6 (Core Profile) Mesa 26.0.4-arch1.1, shading language 4.60
+23:25:42.937: ---------------------------------
+23:25:42.937: video settings reset:
+23:25:42.937: 	base resolution:   1920x1080
+23:25:42.937: 	output resolution: 852x480
+23:25:42.937: 	downscale filter:  Bicubic
+23:25:42.937: 	fps:               30/1
+23:25:42.937: 	format:            NV12
+23:25:42.937: 	YUV mode:          Rec. 709/Partial
+23:25:42.938: NV12 texture support enabled
+23:25:42.938: P010 texture support not available
+23:25:42.950: Audio monitoring device:
+23:25:42.950: 	name: Default
+23:25:42.950: 	id: default
+23:25:42.955: ---------------------------------
+23:25:42.961: Failed to load 'en-US' text for module: 'decklink-captions.so'
+23:25:42.968: Failed to load 'en-US' text for module: 'decklink-output-ui.so'
+23:25:42.974: A DeckLink iterator could not be created.  The DeckLink drivers may not be installed
+23:25:42.974: Failed to initialize module 'decklink.so'
+23:25:43.541: [pipewire] Available capture sources:
+23:25:43.541: [pipewire]     - Monitor source
+23:25:43.541: [pipewire]     - Window source
+23:25:43.571: v4l2loopback not installed, virtual camera not registered
+23:25:43.647: VAAPI: Failed to initialize display in vaapi_device_h264_supported
+23:25:43.648: FFmpeg VAAPI H264 encoding not supported
+23:25:43.648: VAAPI: Failed to initialize display in vaapi_device_av1_supported
+23:25:43.648: FFmpeg VAAPI AV1 encoding not supported
+23:25:43.649: VAAPI: Failed to initialize display in vaapi_device_hevc_supported
+23:25:43.649: FFmpeg VAAPI HEVC encoding not supported
+23:25:43.665: os_dlopen(libnvidia-encode.so.1->libnvidia-encode.so.1): libnvidia-encode.so.1: cannot open shared object file: No such file or directory
+23:25:43.665: 
+23:25:43.665: NVENC not supported
+23:25:43.665: Failed to initialize module 'obs-nvenc.so'
+23:25:43.759: [obs-websocket] [obs_module_load] you can haz websockets (Version: 5.7.3 | RPC Version: 1)
+23:25:43.759: [obs-websocket] [obs_module_load] Qt version (compile-time): 6.11.0 | Qt version (run-time): 6.11.0
+23:25:43.759: [obs-websocket] [obs_module_load] Linked ASIO Version: 103800
+23:25:43.779: [obs-websocket] [obs_module_load] Module loaded.
+23:25:43.795: ---------------------------------
+23:25:43.795:   Loaded Modules:
+23:25:43.795:     text-freetype2.so
+23:25:43.795:     rtmp-services.so
+23:25:43.795:     obs-x264.so
+23:25:43.795:     obs-websocket.so
+23:25:43.795:     obs-webrtc.so
+23:25:43.795:     obs-vst.so
+23:25:43.795:     obs-transitions.so
+23:25:43.795:     obs-qsv11.so
+23:25:43.795:     obs-outputs.so
+23:25:43.795:     obs-libfdk.so
+23:25:43.795:     obs-filters.so
+23:25:43.795:     obs-ffmpeg.so
+23:25:43.795:     linux-v4l2.so
+23:25:43.795:     linux-pulseaudio.so
+23:25:43.795:     linux-pipewire.so
+23:25:43.795:     linux-jack.so
+23:25:43.795:     linux-capture.so
+23:25:43.795:     linux-alsa.so
+23:25:43.795:     image-source.so
+23:25:43.795:     frontend-tools.so
+23:25:43.795:     decklink-output-ui.so
+23:25:43.795:     decklink-captions.so
+23:25:43.795: ---------------------------------
+23:25:43.796: ---------------------------------
+23:25:43.796: Available Encoders:
+23:25:43.796:   Video Encoders:
+23:25:43.796: 	- ffmpeg_svt_av1 (SVT-AV1)
+23:25:43.796: 	- ffmpeg_aom_av1 (AOM AV1)
+23:25:43.796: 	- obs_x264 (x264)
+23:25:43.796:   Audio Encoders:
+23:25:43.796: 	- ffmpeg_aac (FFmpeg AAC)
+23:25:43.796: 	- ffmpeg_opus (FFmpeg Opus)
+23:25:43.796: 	- ffmpeg_pcm_s16le (FFmpeg PCM (16-bit))
+23:25:43.796: 	- ffmpeg_pcm_s24le (FFmpeg PCM (24-bit))
+23:25:43.796: 	- ffmpeg_pcm_f32le (FFmpeg PCM (32-bit float))
+23:25:43.796: 	- ffmpeg_alac (FFmpeg ALAC (24-bit))
+23:25:43.796: 	- ffmpeg_flac (FFmpeg FLAC (16-bit))
+23:25:43.796: 	- libfdk_aac (libfdk AAC)
+23:25:43.796: ==== Startup complete ===============================================
+23:25:43.898: All scene data cleared
+23:25:43.898: ------------------------------------------------
+23:25:43.916: Device for 'Audio Output Capture' source Desktop Audio is also used for audio monitoring.
+23:25:43.916: Deduplication logic is being applied to all monitored sources.
+23:25:43.917: pulse-input: Server name: 'PulseAudio (on PipeWire 1.6.3) 15.0.0'
+23:25:43.918: pulse-input: Audio format: s32le, 48000 Hz, 2 channels
+23:25:43.918: pulse-input: Started recording from 'alsa_output.pci-0000_00_1f.3.analog-stereo.monitor' (default)
+23:25:43.919: [Loaded global audio device]: 'Desktop Audio'
+23:25:43.920: pulse-input: Server name: 'PulseAudio (on PipeWire 1.6.3) 15.0.0'
+23:25:43.921: pulse-input: Audio format: s32le, 48000 Hz, 2 channels
+23:25:43.921: pulse-input: Started recording from 'alsa_input.pci-0000_00_1f.3.analog-stereo' (default)
+23:25:43.922: [Loaded global audio device]: 'Mic/Aux'
+23:25:43.922: PipeWire initialized
+23:25:43.924: pulse-input: Server name: 'PulseAudio (on PipeWire 1.6.3) 15.0.0'
+23:25:43.925: pulse-input: Audio format: s32le, 48000 Hz, 2 channels
+23:25:43.925: pulse-input: Started recording from 'alsa_input.pci-0000_00_1f.3.analog-stereo' (default)
+23:25:43.927: pulse-input: Server name: 'PulseAudio (on PipeWire 1.6.3) 15.0.0'
+23:25:43.927: pulse-input: Audio format: s32le, 48000 Hz, 2 channels
+23:25:43.928: pulse-input: Started recording from 'alsa_input.pci-0000_00_1f.3.analog-stereo'
+23:25:43.935: Switched to scene 'Scene'
+23:25:43.935: ------------------------------------------------
+23:25:43.935: Loaded scenes:
+23:25:43.935: - scene 'Scene':
+23:25:43.935:     - source: 'Screen Capture (PipeWire)' (pipewire-screen-capture-source)
+23:25:43.935:     - source: 'Audio Input Capture (PulseAudio)' (pulse_input_capture)
+23:25:43.936:     - source: 'Audio Input Capture (PulseAudio) 2' (pulse_input_capture)
+23:25:43.936: ------------------------------------------------
+23:25:43.972: Device for 'Audio Output Capture' source Desktop Audio is also used for audio monitoring.
+23:25:43.972: Deduplication logic is being applied to all monitored sources.
+23:25:44.323: [pipewire] Screencast session created
+23:25:44.576: adding 21 milliseconds of audio buffering, total audio buffering is now 21 milliseconds (source: Desktop Audio)
+23:25:44.576: 
+23:25:44.918: adding 64 milliseconds of audio buffering, total audio buffering is now 85 milliseconds (source: Audio Input Capture (PulseAudio))
+23:25:44.918: 
+23:25:46.543: [pipewire] Asking for monitor and window
+23:25:46.558: [pipewire] source selected, setting up screencast
+23:25:46.592: [pipewire] Server version: 1.6.3
+23:25:46.593: [pipewire] Library version: 1.6.3
+23:25:46.593: [pipewire] Header version: 1.6.2
+23:25:46.593: [pipewire] Created stream 0x55faac01a430
+23:25:46.593: [pipewire] Stream 0x55faac01a430 state: "connecting" (error: none)
+23:25:46.595: [pipewire] Playing stream 0x55faac01a430
+23:25:46.596: [pipewire] Stream 0x55faac01a430 state: "paused" (error: none)
+23:25:46.677: [pipewire] Negotiated format:
+23:25:46.677: [pipewire]     Format: 12 (Spa:Enum:VideoFormat:BGRA)
+23:25:46.677: [pipewire]     Modifier: 0x0
+23:25:46.677: [pipewire]     Size: 1920x1080
+23:25:46.677: [pipewire]     Framerate: 0/1
+23:25:46.682: [pipewire] Negotiated format:
+23:25:46.683: [pipewire]     Format: 12 (Spa:Enum:VideoFormat:BGRA)
+23:25:46.683: [pipewire]     Modifier: 0x100000000000004
+23:25:46.683: [pipewire]     Size: 1920x1080
+23:25:46.683: [pipewire]     Framerate: 0/1
+23:25:46.711: [pipewire] Stream 0x55faac01a430 state: "streaming" (error: none)
+23:25:46.733: Cannot create EGLImage: Arguments are inconsistent (for example, a valid context requires buffers not supplied by a valid surface).
+23:25:46.733: [pipewire] Renegotiating stream
+23:25:46.735: [pipewire] Stream 0x55faac01a430 state: "paused" (error: none)
+23:25:46.735: [pipewire] Negotiated format:
+23:25:46.735: [pipewire]     Format: 12 (Spa:Enum:VideoFormat:BGRA)
+23:25:46.735: [pipewire]     Modifier: 0x100000000000004
+23:25:46.735: [pipewire]     Size: 1920x1080
+23:25:46.735: [pipewire]     Framerate: 0/1
+23:25:46.741: [pipewire] Negotiated format:
+23:25:46.741: [pipewire]     Format: 12 (Spa:Enum:VideoFormat:BGRA)
+23:25:46.741: [pipewire]     Modifier: 0x100000000000002
+23:25:46.741: [pipewire]     Size: 1920x1080
+23:25:46.741: [pipewire]     Framerate: 0/1
+23:25:46.742: [pipewire] Negotiated format:
+23:25:46.742: [pipewire]     Format: 12 (Spa:Enum:VideoFormat:BGRA)
+23:25:46.742: [pipewire]     Modifier: 0x100000000000002
+23:25:46.742: [pipewire]     Size: 1920x1080
+23:25:46.742: [pipewire]     Framerate: 0/1
+23:25:46.747: [pipewire] Negotiated format:
+23:25:46.747: [pipewire]     Format: 12 (Spa:Enum:VideoFormat:BGRA)
+23:25:46.747: [pipewire]     Modifier: 0x100000000000002
+23:25:46.747: [pipewire]     Size: 1920x1080
+23:25:46.747: [pipewire]     Framerate: 0/1
+23:25:46.770: [pipewire] Stream 0x55faac01a430 state: "streaming" (error: none)
+23:25:59.649: Get on org.freedesktop.portal.Settings returned an invalid reply
+23:25:59.651: Get on org.freedesktop.portal.Settings returned an invalid reply
+23:25:59.652: Get on org.freedesktop.portal.Settings returned an invalid reply
+23:26:07.420: Get on org.freedesktop.portal.Settings returned an invalid reply
+23:26:07.460: Variable "ctp_blue" (aliased by "list_item_bg_selected") does not exist!
+23:26:07.512: VolumeMeter(0x55faac8c5200)  does not have a property named  "peakDecayRate"
+23:26:07.661: VolumeMeter(0x55faac7ffd60)  does not have a property named  "peakDecayRate"
+23:26:08.032: VolumeMeter(0x55faac8f44c0)  does not have a property named  "peakDecayRate"
+23:26:08.088: VolumeMeter(0x55faac80e090)  does not have a property named  "peakDecayRate"
+23:26:13.525: Get on org.freedesktop.portal.Settings returned an invalid reply
+23:26:19.541: Get on org.freedesktop.portal.Settings returned an invalid reply
+23:26:23.184: Get on org.freedesktop.portal.Settings returned an invalid reply
+23:26:26.691: Get on org.freedesktop.portal.Settings returned an invalid reply
+23:26:26.772: VolumeMeter(0x55faac8c5200)  does not have a property named  "meterThickness"
+23:26:26.904: VolumeMeter(0x55faac7ffd60)  does not have a property named  "meterThickness"
+23:26:27.269: VolumeMeter(0x55faac8f44c0)  does not have a property named  "meterThickness"
+23:26:27.351: VolumeMeter(0x55faac80e090)  does not have a property named  "meterThickness"
+23:26:30.686: Get on org.freedesktop.portal.Settings returned an invalid reply
+23:28:05.406: Get on org.freedesktop.portal.Settings returned an invalid reply
+23:29:50.224: Get on org.freedesktop.portal.Settings returned an invalid reply
+23:29:50.284: Get on org.freedesktop.portal.Settings returned an invalid reply
+23:29:50.286: Get on org.freedesktop.portal.Settings returned an invalid reply
+23:29:56.451: Get on org.freedesktop.portal.Settings returned an invalid reply
+23:29:56.487: Variable "ctp_blue" (aliased by "list_item_bg_selected") does not exist!
+23:29:56.555: VolumeMeter(0x55faac8c5200)  does not have a property named  "peakDecayRate"
+23:29:56.679: VolumeMeter(0x55faac7ffd60)  does not have a property named  "peakDecayRate"
+23:29:57.058: VolumeMeter(0x55faac8f44c0)  does not have a property named  "peakDecayRate"
+23:29:57.114: VolumeMeter(0x55faac80e090)  does not have a property named  "peakDecayRate"
+23:30:05.311: Get on org.freedesktop.portal.Settings returned an invalid reply
+23:30:05.343: Variable "ctp_blue" (aliased by "list_item_bg_selected") does not exist!
+23:30:05.382: VolumeMeter(0x55faac8c5200)  does not have a property named  "peakDecayRate"
+23:30:05.494: VolumeMeter(0x55faac7ffd60)  does not have a property named  "peakDecayRate"
+23:30:05.834: VolumeMeter(0x55faac8f44c0)  does not have a property named  "peakDecayRate"
+23:30:05.882: VolumeMeter(0x55faac80e090)  does not have a property named  "peakDecayRate"
+23:30:10.455: Get on org.freedesktop.portal.Settings returned an invalid reply
+23:30:15.875: Get on org.freedesktop.portal.Settings returned an invalid reply
+23:30:16.993: Settings changed (appearance)
+23:30:16.993: ------------------------------------------------
+23:31:43.376: ==== Shutting down ==================================================
+23:31:43.534: pulse-input: Stopped recording from 'alsa_output.pci-0000_00_1f.3.analog-stereo.monitor'
+23:31:43.534: pulse-input: Got 14380 packets with 17256000 frames
+23:31:43.534: Deduplication logic stopped.
+23:31:43.534: pulse-input: Stopped recording from 'alsa_input.pci-0000_00_1f.3.analog-stereo'
+23:31:43.534: pulse-input: Got 14379 packets with 17254800 frames
+23:31:43.535: [pipewire] Stream 0x55faac01a430 state: "paused" (error: none)
+23:31:43.535: [pipewire] Stream 0x55faac01a430 state: "unconnected" (error: none)
+23:31:43.721: pulse-input: Stopped recording from 'alsa_input.pci-0000_00_1f.3.analog-stereo'
+23:31:43.721: pulse-input: Got 14382 packets with 17258400 frames
+23:31:43.722: pulse-input: Stopped recording from 'alsa_input.pci-0000_00_1f.3.analog-stereo'
+23:31:43.722: pulse-input: Got 13801 packets with 16561200 frames
+23:31:43.787: The Wayland connection broke. Did the Wayland compositor die?

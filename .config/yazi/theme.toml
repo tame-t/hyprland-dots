@@ -1,0 +1,5 @@
+[icon]
+prepend_dirs = [
+    { name = "Iso", text = "", fg = "#09a1b8" },
+    { name = "Usb", text = "󱊟", fg = "#09a1b8" }
+]

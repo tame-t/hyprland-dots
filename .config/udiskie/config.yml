@@ -1,0 +1,13 @@
+program_options:
+  tray: false
+  automount: true
+  notify: true
+
+event_hooks:
+- event: device_mounted
+  command: >
+    bash -c 'mkdir -p /home/ethan/Usb &&
+    mount --bind "{mount_path}" /home/ethan/Usb'
+- event: device_unmounted
+  command: >
+    bash -c 'umount /home/ethan/Usb 2>/dev/null; true'
