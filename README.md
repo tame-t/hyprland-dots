@@ -92,7 +92,7 @@ spicetify tmux neovim
 ```bash
   yay -S hyprland waybar rofi-wayland kitty zsh oh-my-zsh-git zsh-autosuggestions \
     fastfetch btop cava yazi swappy grim slurp wl-clipboard \
-    swww swaync udiskie network-manager-applet \
+    awww swaync udiskie network-manager-applet \
     networkmanager bluez bluez-utils \
     pipewire wireplumber pipewire-pulse pavucontrol brightnessctl \
     neovim tmux obs-studio nwg-look \
