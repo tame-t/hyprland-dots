@@ -76,6 +76,7 @@
 > These are personal dotfiles — install selectively, not blindly.
 
 **Install yay**
+  
   The repo for yay https://github.com/jguer/yay
   
 ```bash 
