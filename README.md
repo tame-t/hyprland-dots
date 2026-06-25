@@ -100,7 +100,7 @@ spicetify tmux neovim
     xdg-desktop-portal-hyprland xdg-user-dirs
 ```
 
-***If you use spotify***
+**If you want spotify**
 ```bash
 yay -S spicetify-cli spotify
 ```
