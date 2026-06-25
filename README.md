@@ -121,7 +121,7 @@ spicetify tmux neovim
 yay -S spicetify-cli spotify
 ```
 
-**Deploy**
+**Install**
 
 ```bash
 git clone https://github.com/yourusername/hyprland-dots ~/Desktop/hyprland-dots
