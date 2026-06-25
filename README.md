@@ -86,11 +86,16 @@ fastfetch btop cava yazi swappy udiskie swaync awww nm-applet
 
 # Optional
 spicetify tmux neovim
+
+# Install command
+yay -Syu && yay -S hyprland waybar rofi kitty zsh \
+fastfetch btop cava yazi swappy udiskie swaync awww nm-applet \
+spicetify tmux neovim
 ```
 
 **Package to install**
 ```bash
-  yay -S hyprland waybar rofi-wayland kitty zsh oh-my-zsh-git zsh-autosuggestions \
+  yay =Syu && yay -S hyprland waybar rofi-wayland kitty zsh oh-my-zsh-git zsh-autosuggestions \
     fastfetch btop cava yazi swappy grim slurp wl-clipboard \
     awww swaync udiskie network-manager-applet \
     networkmanager bluez bluez-utils \
