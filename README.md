@@ -16,7 +16,7 @@
 
 ## Palette
 
-| Label | Hex | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
+| Label | Hex | Color | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
 |---|---|---|
 | Base | `#1e1e2e` | ![#1e1e2e](https://via.placeholder.com/20/1e1e2e/1e1e2e.png) |
 | Mantle | `#181825` | ![#181825](https://via.placeholder.com/20/181825/181825.png) |
