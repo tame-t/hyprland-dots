@@ -42,7 +42,7 @@ install_yay() {
 
 # ── make home dirs  ───────────────────────────────────────────────────────────
 
-mkdir -p "$HOME/{"Desktop","Downloads","Documents","Iso","Music","Pictures","Usb","Videos"}/"
+mkdir -p "$HOME"/{Desktop,Downloads,Documents,Iso,Music,Pictures,Usb,Videos}
 
 # ── packages ──────────────────────────────────────────────────────────────────
 install_packages() {
@@ -63,6 +63,64 @@ install_packages() {
     awww
 
   success "Packages installed"
+}
+
+# ── optional: sddm astronaut theme ───────────────────────────────────────────
+install_sddm_theme() {
+  echo
+  read -rp "$(echo -e "${YELLOW}?${NC}  Install SDDM Astronaut Theme? [y/N] ")" ans
+  [[ "${ans,,}" != "y" ]] && return
+
+  local theme_name="sddm-astronaut-theme"
+  local theme_repo="https://github.com/Keyitdev/sddm-astronaut-theme.git"
+  local themes_dir="/usr/share/sddm/themes"
+  local clone_dir
+  clone_dir="$(mktemp -d)"
+  local date_stamp
+  date_stamp="$(date +%s)"
+
+  local -a theme_variants=(
+    "astronaut" "black_hole" "cyberpunk" "hyprland_kath" "jake_the_dog"
+    "japanese_aesthetic" "pixel_sakura" "pixel_sakura_static"
+    "post-apocalyptic_hacker" "purple_leaves"
+  )
+
+  info "Installing SDDM and Qt6 dependencies…"
+  sudo pacman --needed -S sddm qt6-svg qt6-virtualkeyboard qt6-multimedia-ffmpeg
+  success "SDDM dependencies installed"
+
+  info "Cloning sddm-astronaut-theme…"
+  git clone -b master --depth 1 "$theme_repo" "$clone_dir/$theme_name"
+  success "Repository cloned"
+
+  local dst="$themes_dir/$theme_name"
+  [[ -d "$dst" ]] && sudo mv "$dst" "${dst}_$date_stamp"
+  sudo mkdir -p "$dst"
+
+  info "Installing theme files…"
+  sudo cp -r "$clone_dir/$theme_name"/. "$dst"/
+  [[ -d "$dst/Fonts" ]] && sudo cp -r "$dst/Fonts"/. /usr/share/fonts/
+  success "Theme files installed"
+
+  printf '[Theme]\nCurrent=%s\n' "$theme_name" | sudo tee /etc/sddm.conf >/dev/null
+  sudo mkdir -p /etc/sddm.conf.d
+  printf '[General]\nInputMethod=qtvirtualkeyboard\n' | sudo tee /etc/sddm.conf.d/virtualkbd.conf >/dev/null
+
+  echo
+  info "Select a theme variant:"
+  local theme_variant
+  select theme_variant in "${theme_variants[@]}"; do
+    [[ -n "$theme_variant" ]] && break
+  done
+  sudo sed -i "s|^ConfigFile=.*|ConfigFile=Themes/${theme_variant}.conf|" "$dst/metadata.desktop"
+  success "Theme variant set to: $theme_variant"
+
+  info "Enabling SDDM service…"
+  sudo systemctl disable display-manager.service 2>/dev/null || true
+  sudo systemctl enable --now sddm.service
+  success "SDDM enabled — reboot required"
+
+  rm -rf "$clone_dir"
 }
 
 # ── optional: spotify + spicetify ────────────────────────────────────────────
@@ -181,6 +239,7 @@ main() {
   setup_wallpaper_dir
   setup_xdg
   install_spotify
+  install_sddm_theme
 
   echo
   echo -e "${GREEN}${BOLD}All done!${NC}"
