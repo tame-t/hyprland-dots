@@ -75,6 +75,16 @@
 
 > These are personal dotfiles — install selectively, not blindly.
 
+**Install yay**
+  The repo for yay https://github.com/jguer/yay
+  
+```bash 
+# you need to install yay AUR helper to install the packages below
+sudo pacman =Syu && sudo pacman -S --needed git base-devel
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+```
 **Prerequisites**
 
 ```bash
