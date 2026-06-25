@@ -80,7 +80,7 @@
 ```bash
 git clone https://github.com/tame-t/hyprland-dots
 cd ~/hyprland-dots
-sudo chmod +x install.sh
+chmod +x install.sh
 ./install.sh
 ```
 
