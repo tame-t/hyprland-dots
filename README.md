@@ -135,6 +135,7 @@ cp .zshrc ~/
 > Replace wallpaper at `~/Pictures/Wallpaper/wallpaper.png` to match the expected path in `hyprland.conf`.
 
 ---
+## If you pc broken call teha
 
 ## Shell
 
