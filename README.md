@@ -88,6 +88,23 @@ fastfetch btop cava yazi swappy udiskie swaync awww nm-applet
 spicetify tmux neovim
 ```
 
+**Package to install**
+```bash
+  yay -S hyprland waybar rofi-wayland kitty zsh oh-my-zsh-git zsh-autosuggestions \
+    fastfetch btop cava yazi swappy grim slurp wl-clipboard \
+    swww swaync udiskie network-manager-applet \
+    networkmanager bluez bluez-utils \
+    pipewire wireplumber pipewire-pulse pavucontrol brightnessctl \
+    neovim tmux obs-studio nwg-look \
+    ttf-fira-code nerd-fonts-fira-code \
+    xdg-desktop-portal-hyprland xdg-user-dirs
+```
+
+***If you use spotify***
+```bash
+yay -S spicetify-cli spotify
+```
+
 **Deploy**
 
 ```bash
