@@ -131,6 +131,7 @@ cd ~/Desktop/hyprland-dots
 cp -r .config/* ~/.config/
 cp .tmux.conf ~/
 cp .zshrc ~/
+cp .gtkrc-2.0 ~/
 ```
 
 > Replace wallpaper at `~/Pictures/Wallpaper/wallpaper.png` to match the expected path in `hyprland.conf`.
