@@ -239,14 +239,22 @@ _nvidia_driver_pkg() {
   chip_code=$(echo "$gpu_line" | grep -oE '\b[A-Z]{2}[0-9]{2,3}[A-Z]?\b' | head -1 || true)
   chip_prefix="${chip_code:0:2}"
 
+  # Maxwell Gen 1 (GTX 750 / 750 Ti) was dropped from the 530+ driver; needs the 525xx AUR branch.
+  # Must be checked before the GM prefix case which covers Maxwell Gen 2 (GM200+).
+  case "$chip_code" in
+    GM107|GM108) echo "nvidia-525xx-dkms" ; return ;;
+  esac
+
   case "$chip_prefix" in
-    GB|AD|GA|TU|GP|GM) echo "nvidia"            ; return ;;  # Maxwell → Blackwell
+    GB|AD|GA|TU|GP|GM) echo "nvidia"            ; return ;;  # Maxwell Gen 2 → Blackwell
     GK)                 echo "nvidia-470xx-dkms" ; return ;;  # Kepler (GTX 600 / 700)
     GF)                 echo "nvidia-390xx-dkms" ; return ;;  # Fermi  (GTX 400 / 500)
   esac
 
   # Fallback: match on the human-readable model name
-  if   echo "$gpu_line" | grep -qiE 'RTX|GTX 16[0-9]{2}|GTX 1[0-9]{3}|GTX 9[0-9]{2}|GTX 750'; then
+  if echo "$gpu_line" | grep -qiE 'GTX 750( Ti)?([^0-9]|$)'; then
+    echo "nvidia-525xx-dkms"  # Maxwell Gen 1 by model name when chip code is absent
+  elif echo "$gpu_line" | grep -qiE 'RTX|GTX 16[0-9]{2}|GTX 1[0-9]{3}|GTX 9[0-9]{2}'; then
     echo "nvidia"
   elif echo "$gpu_line" | grep -qiE 'GTX [78][0-9]{2}|GTX 6[0-9]{2}'; then
     echo "nvidia-470xx-dkms"
@@ -293,6 +301,12 @@ _install_nvidia() {
     nvidia|nvidia-dkms)
       [[ "$drv" == "nvidia-dkms" ]] && _install_kernel_headers
       yay -S --needed --noconfirm "$drv" nvidia-utils nvidia-settings libva-nvidia-driver
+      ;;
+    nvidia-525xx-dkms)
+      # nvidia-525xx-dkms has exact-version deps on nvidia-525xx and nvidia-525xx-utils;
+      # all three must be installed together so AUR can satisfy them in one transaction.
+      _install_kernel_headers
+      yay -S --needed --noconfirm nvidia-525xx nvidia-525xx-dkms nvidia-525xx-utils
       ;;
     nvidia-470xx-dkms)
       _install_kernel_headers
