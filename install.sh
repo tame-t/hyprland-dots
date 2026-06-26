@@ -1001,6 +1001,15 @@ main() {
   echo -e "  • Log out and select Hyprland from your display manager to start."
   echo -e "  • Place your wallpaper at ${BOLD}~/Pictures/Wallpaper/wallpaper.png${NC}."
   echo -e "  • Any previous configs were backed up with a ${BOLD}.bak.TIMESTAMP${NC} suffix."
+
+  echo
+  read -rp "$(echo -e "${YELLOW}?${NC}  Reboot now? [y/N] ")" reboot_ans
+  if [[ "${reboot_ans,,}" == "y" ]]; then
+    info "Rebooting…"
+    sudo reboot now
+  else
+    info "Reboot skipped — remember to reboot before starting Hyprland."
+  fi
 }
 
 main "$@"
