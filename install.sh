@@ -227,164 +227,758 @@ setup_xdg() {
   command -v xdg-user-dirs-update &>/dev/null && xdg-user-dirs-update
 }
 
-# ── gpu driver detection & installation ───────────────────────────────────────
+# ── optional: nvidia drivers ──────────────────────────────────────────────────
+#
+# Sourced from Nvidiainstall by Justus0405 (MIT)
+# https://github.com/Justus0405/Nvidiainstall
 
-# Returns the correct NVIDIA driver package name for the detected GPU.
-# Detection order: chip codename prefix → model-name keyword fallback.
-_nvidia_driver_pkg() {
-  local gpu_line="$1"
+_nv_script_version="2.5"
+_nv_legacy_mode="false"
 
-  # Chip codenames from lspci e.g. "GP104 [GeForce GTX 1080]", "TU116", "GA102", "AD102", "GB202"
-  local chip_code chip_prefix
-  chip_code=$(echo "$gpu_line" | grep -oE '\b[A-Z]{2}[0-9]{2,3}[A-Z]?\b' | head -1 || true)
-  chip_prefix="${chip_code:0:2}"
+# Nvidia colour codes (lowercase — no collision with install.sh's uppercase vars)
+black="\e[1;30m"      red="\e[1;31m"         green="\e[1;32m"
+yellow="\e[1;33m"     blue="\e[1;34m"        purple="\e[1;35m"
+cyan="\e[1;36m"       lightGray="\e[1;37m"   gray="\e[1;90m"
+lightRed="\e[1;91m"   lightGreen="\e[1;92m"  lightYellow="\e[1;93m"
+lightBlue="\e[1;94m"  lightPurple="\e[1;95m" lightCyan="\e[1;96m"
+white="\e[1;97m"      bold="\e[1m"           faint="\e[2m"
+italic="\e[3m"        underlined="\e[4m"     blinking="\e[5m"
+reset="\e[0m"
 
-  # Maxwell Gen 1 (GTX 750 / 750 Ti) was dropped from the 530+ driver; needs the 525xx AUR branch.
-  # Must be checked before the GM prefix case which covers Maxwell Gen 2 (GM200+).
-  case "$chip_code" in
-    GM107|GM108) echo "nvidia-525xx-dkms" ; return ;;
-  esac
-
-  case "$chip_prefix" in
-    GB|AD|GA|TU|GP|GM) echo "nvidia"            ; return ;;  # Maxwell Gen 2 → Blackwell
-    GK)                 echo "nvidia-470xx-dkms" ; return ;;  # Kepler (GTX 600 / 700)
-    GF)                 echo "nvidia-390xx-dkms" ; return ;;  # Fermi  (GTX 400 / 500)
-  esac
-
-  # Fallback: match on the human-readable model name
-  if echo "$gpu_line" | grep -qiE 'GTX 750( Ti)?([^0-9]|$)'; then
-    echo "nvidia-525xx-dkms"  # Maxwell Gen 1 by model name when chip code is absent
-  elif echo "$gpu_line" | grep -qiE 'RTX|GTX 16[0-9]{2}|GTX 1[0-9]{3}|GTX 9[0-9]{2}'; then
-    echo "nvidia"
-  elif echo "$gpu_line" | grep -qiE 'GTX [78][0-9]{2}|GTX 6[0-9]{2}'; then
-    echo "nvidia-470xx-dkms"
-  elif echo "$gpu_line" | grep -qiE 'GTX [45][0-9]{2}|GTS [0-9]'; then
-    echo "nvidia-390xx-dkms"
-  else
-    warn "Unrecognised NVIDIA chip '${chip_code:-?}' — defaulting to current driver"
-    echo "nvidia"
-  fi
+logMessage() {
+    local type="$1"
+    local message="$2"
+    case "${type}" in
+    "info" | "INFO")
+        echo -e "${gray}[${cyan}i${gray}]${reset} ${message}"
+        ;;
+    "done" | "DONE")
+        echo -e "${gray}[${green}✓${gray}]${reset} ${message}"
+        exit 0
+        ;;
+    "warning" | "WARNING")
+        echo -e "${gray}[${red}!${gray}]${reset} ${message}"
+        ;;
+    "error" | "ERROR")
+        echo -e "${red}ERROR${reset}: ${message}"
+        exit 1
+        ;;
+    *)
+        echo -e "[UNDEFINED] ${message}"
+        ;;
+    esac
 }
 
-# Installs kernel headers for every kernel present on the system (needed by DKMS).
-_install_kernel_headers() {
-  local found=false
-  for kernel in linux linux-zen linux-lts linux-hardened linux-cachyos; do
-    if pacman -Qq "$kernel" &>/dev/null; then
-      sudo pacman -S --needed --noconfirm "${kernel}-headers"
-      found=true
+checkAurHelper() {
+    if command -v yay >/dev/null 2>&1; then
+        logMessage "info" "Yay is installed."
+    else
+        logMessage "info" "Yay is not installed."
+        installAurHelper
     fi
-  done
-  if ! $found; then
-    warn "Could not detect a known kernel package — install kernel headers manually for DKMS"
-  fi
 }
 
-_install_nvidia() {
-  local gpu_line="$1"
-  local gpu_name
-  gpu_name=$(echo "$gpu_line" | sed 's/.*: //' | sed 's/ (rev.*//')
-  info "NVIDIA GPU detected: $gpu_name"
-
-  local drv
-  drv=$(_nvidia_driver_pkg "$gpu_line")
-
-  # Non-default kernels (linux-zen, linux-lts, etc.) need the dkms variant
-  if [[ "$drv" == "nvidia" ]] && ! pacman -Qq linux &>/dev/null; then
-    drv="nvidia-dkms"
-    info "Non-default kernel detected — switching to nvidia-dkms"
-  fi
-
-  info "Driver package: $drv"
-
-  case "$drv" in
-    nvidia|nvidia-dkms)
-      [[ "$drv" == "nvidia-dkms" ]] && _install_kernel_headers
-      yay -S --needed --noconfirm "$drv" nvidia-utils nvidia-settings libva-nvidia-driver
-      ;;
-    nvidia-525xx-dkms)
-      # nvidia-525xx-dkms has exact-version deps on nvidia-525xx and nvidia-525xx-utils;
-      # all three must be installed together so AUR can satisfy them in one transaction.
-      _install_kernel_headers
-      yay -S --needed --noconfirm nvidia-525xx nvidia-525xx-dkms nvidia-525xx-utils
-      ;;
-    nvidia-470xx-dkms)
-      _install_kernel_headers
-      yay -S --needed --noconfirm nvidia-470xx-dkms nvidia-470xx-utils
-      ;;
-    nvidia-390xx-dkms)
-      _install_kernel_headers
-      yay -S --needed --noconfirm nvidia-390xx-dkms nvidia-390xx-utils
-      ;;
-  esac
-
-  # DRM kernel modesetting — mandatory for Wayland compositors
-  if [[ ! -f /etc/modprobe.d/nvidia.conf ]] || ! grep -q 'modeset=1' /etc/modprobe.d/nvidia.conf 2>/dev/null; then
-    echo "options nvidia-drm modeset=1 fbdev=1" | sudo tee /etc/modprobe.d/nvidia.conf >/dev/null
-    info "DRM modesetting enabled (/etc/modprobe.d/nvidia.conf)"
-  fi
-
-  # Early KMS — add NVIDIA modules to the initramfs
-  local mkinit_cfg="/etc/mkinitcpio.conf"
-  if [[ -f "$mkinit_cfg" ]] && ! grep -q 'nvidia' "$mkinit_cfg"; then
-    sudo sed -i 's/^MODULES=(\(.*\))/MODULES=(\1 nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' "$mkinit_cfg"
-    sudo mkinitcpio -P
-    info "NVIDIA modules added to mkinitcpio and initramfs rebuilt"
-  fi
-
-  success "NVIDIA drivers installed — reboot required"
+installAurHelper() {
+    local targetUser="${SUDO_USER:-$(whoami)}"
+    logMessage "info" "Installing yay..."
+    sudo -u "${targetUser}" bash <<'EOF'
+    cd /tmp
+    git clone https://aur.archlinux.org/yay.git
+    cd yay
+    makepkg -si --noconfirm
+EOF
+    logMessage "info" "Sucessfully installed yay."
 }
 
-_install_amd() {
-  local gpu_line="$1"
-  local gpu_name
-  gpu_name=$(echo "$gpu_line" | sed 's/.*: //' | sed 's/ (rev.*//')
-  info "AMD GPU detected: $gpu_name"
-
-  # Pre-GCN chips (HD 6000 and older) use the legacy radeon kernel driver
-  if echo "$gpu_line" | grep -qiE \
-    '\b(Cedar|Redwood|Juniper|Cypress|Hemlock|Barts|Caicos|Turks|Cayman|Antilles|Wrestler|Ontario|Zacate|Llano|Trinity|Richland|RV[0-9]{3}|RS[0-9]{3})\b'; then
-    info "Pre-GCN AMD GPU — installing legacy ATI driver…"
-    sudo pacman -S --needed --noconfirm mesa libva-mesa-driver xf86-video-ati
-    success "AMD legacy (ATI) drivers installed"
-  else
-    # GCN and newer (HD 7700+, RX series, RDNA 1/2/3/4, APUs Kaveri+)
-    info "GCN+ AMD GPU — installing open-source AMDGPU drivers…"
-    sudo pacman -S --needed --noconfirm mesa vulkan-radeon libva-mesa-driver mesa-vdpau
-    success "AMD drivers installed"
-  fi
+aurHelperInstall() {
+    local packages="$1"
+    local targetUser="${SUDO_USER:-$(whoami)}"
+    # shellcheck disable=SC2086
+    sudo -u "${targetUser}" yay -S --needed --noconfirm ${packages}
 }
 
-install_gpu_drivers() {
-  info "Detecting GPU…"
+aurHelperUninstall() {
+    local packages="$1"
+    local targetUser="${SUDO_USER:-$(whoami)}"
+    # shellcheck disable=SC2086
+    sudo -u "${targetUser}" yay -R --noconfirm ${packages}
+}
 
-  # Make sure lspci is available
-  command -v lspci &>/dev/null || sudo pacman -S --needed --noconfirm pciutils
+checkChaoticAur() {
+    if [[ -f "/etc/pacman.d/chaotic-mirrorlist" ]]; then
+        logMessage "info" "Chaotic AUR is installed."
+    else
+        logMessage "warning" "Chaotic AUR is not installed."
+        installChaoticAUR
+    fi
+}
 
-  local gpu_info
-  gpu_info=$(lspci 2>/dev/null | grep -iE '(vga compatible controller|3d controller|display controller)') || true
+installChaoticAUR() {
+    logMessage "info" "Installing the Chaotic AUR..."
 
-  if [[ -z "$gpu_info" ]]; then
-    warn "No GPU found via lspci — skipping driver installation"
-    return
-  fi
+    sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
+    sudo pacman-key --lsign-key 3056513887B78AEB
 
-  local nvidia_line amd_line intel_line
-  nvidia_line=$(echo "$gpu_info" | grep -i 'nvidia'             || true)
-  amd_line=$(   echo "$gpu_info" | grep -iE '(amd|ati|radeon)' || true)
-  intel_line=$( echo "$gpu_info" | grep -i 'intel'             || true)
+    sudo pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
+    sudo pacman -U --noconfirm 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
 
-  if [[ -n "$nvidia_line" ]]; then
-    _install_nvidia "$nvidia_line"
-  elif [[ -n "$amd_line" ]]; then
-    _install_amd "$amd_line"
-  elif [[ -n "$intel_line" ]]; then
-    # Intel integrated: i915 kernel driver is built-in, mesa is pulled by compositor deps
-    info "Intel integrated graphics detected — no additional drivers required"
-  else
-    warn "GPU vendor not recognised — skipping driver installation"
-    warn "Detected: $(echo "$gpu_info" | head -1)"
-  fi
+    sudo tee -a "/etc/pacman.conf" >/dev/null <<EOF
+[chaotic-aur]
+Include = /etc/pacman.d/chaotic-mirrorlist
+EOF
+
+    sudo pacman -Syy
+
+    logMessage "info" "Successfully installed the Chaotic AUR."
+}
+
+checkNvidia() {
+    gpuGen="Unknown"
+    gpuDriver="Unknown"
+
+    gpuInfo=$(lspci -nn | grep -i 'VGA.*NVIDIA')
+    gpuName=$(echo "${gpuInfo}" | sed -E 's/.*NVIDIA Corporation //; s/ \[.*//')
+
+    case "${gpuName}" in
+    *"GB10"* | *"GB20"*)
+        gpuGen="Blackwell"
+        gpuDriver="nvidia-open-dkms"
+        ;;
+    *"GH10"*)
+        gpuGen="Hopper"
+        gpuDriver="nvidia-open-dkms"
+        ;;
+    *"AD10"*)
+        gpuGen="Ada Lovelace"
+        gpuDriver="nvidia-open-dkms"
+        ;;
+    *"GA10"*)
+        gpuGen="Ampere"
+        gpuDriver="nvidia-open-dkms"
+        ;;
+    *"TU10"* | *"TU11"*)
+        gpuGen="Turing"
+        gpuDriver="nvidia-open-dkms"
+        ;;
+    *"GV10"*)
+        gpuGen="Volta"
+        gpuDriver="nvidia-580xx-dkms"
+        ;;
+    *"GP10"*)
+        gpuGen="Pascal"
+        gpuDriver="nvidia-580xx-dkms"
+        ;;
+    *"GM10"* | *"GM20"*)
+        gpuGen="Maxwell"
+        gpuDriver="nvidia-580xx-dkms"
+        ;;
+    *"EXK107"* | *"GK10"* | *"GK11"* | *"GK18"* | *"GK20"* | *"GK21"*)
+        gpuGen="Kepler"
+        gpuDriver="nvidia-470xx-dkms"
+        ;;
+    *"EXMF1"* | *"GF10"* | *"GF11"*)
+        gpuGen="Fermi"
+        gpuDriver="nvidia-390xx-dkms"
+        ;;
+    *"Kal-El"* | *"Tegra 2"* | *"Wayne"*)
+        gpuGen="VLIW Vec4"
+        gpuDriver="nvidia-390xx-dkms"
+        ;;
+    *"C77"* | *"C78"* | *"C79"* | *"C7A"* | *"G80"* | *"G84"* | *"G86"* | *"G92"* | *"G94"* | *"G96"* | *"G98"* | *"ION"* | *"C87"* | *"C89"* | *"GT20"* | *"GT21"*)
+        gpuGen="Tesla"
+        gpuDriver="nvidia-340xx-dkms"
+        ;;
+    *"C51"* | *"C61"* | *"C67"* | *"C68"* | *"C73"* | *"G70"* | *"G71"* | *"G72"* | *"G73"* | *"NV40"* | *"NV41"* | *"NV42"* | *"NV43"* | *"NV44"* | *"NV45"* | *"NV48"* | *"RSX"*)
+        gpuGen="Curie"
+        gpuDriver="unsupported"
+        ;;
+    *"NV30"* | *"NV31"* | *"NV34"* | *"NV35"* | *"NV36"* | *"NV37"* | *"NV38"* | *"NV39"*)
+        gpuGen="Rankine"
+        gpuDriver="unsupported"
+        ;;
+    *"NV20"* | *"NV25"* | *"NV28"* | *"NV2A"*)
+        gpuGen="Kelvin"
+        gpuDriver="unsupported"
+        ;;
+    *"Crush1"* | *"NV10"* | *"NV11"* | *"NV15"* | *"NV17"* | *"NV18"*)
+        gpuGen="Celsius"
+        gpuDriver="unsupported"
+        ;;
+    *"NV4"* | *"NV5"*)
+        gpuGen="Fahrenheit"
+        gpuDriver="unsupported"
+        ;;
+    *)
+        gpuGen="Unknown"
+        gpuDriver="unidentified"
+        ;;
+    esac
+
+    if [[ ${gpuDriver} == "unsupported" ]]; then
+        logMessage "error" "${gpuGen} is not supported anymore."
+    fi
+
+    if [[ ${gpuDriver} == "unidentified" ]]; then
+        chooseGpuDriver
+    fi
+
+    if [[ -z ${gpuName} ]]; then
+        gpuName="Unkown"
+    fi
+}
+
+checkInstalledDriver() {
+    legacyDriver=$(pacman -Qq | grep -E '^nvidia$')
+    installedDriver=$(pacman -Qq | grep -E 'nvidia-(dkms|open-dkms|470xx-dkms|390xx-dkms|340xx-dkms)')
+
+    if [[ -n ${legacyDriver} ]]; then
+        installedDriver="nvidia"
+    fi
+
+    if [[ -z ${installedDriver} ]]; then
+        installedDriver="none"
+    fi
+}
+
+chooseGpuDriver() {
+    clear
+    echo -e "\t┌──────────────────────────────────────────────────┐"
+    echo -e "\t│    / \                                           │"
+    echo -e "\t│   / | \     We could not identify your GPU.      │"
+    echo -e "\t│  /  #  \    Please select which driver you       │"
+    echo -e "\t│ /_______\   want to manage.                      │"
+    echo -e "\t│                                                  │"
+    echo -e "\t│ [!] Curie and older are not supported anymore!   │"
+    echo -e "\t├──────────────────────────────────────────────────┤"
+    echo -e "\t│                                                  │"
+    echo -e "\t│ [1] nvidia-open-dkms          [Turing and newer] │"
+    echo -e "\t│ [2] nvidia-580xx-dkms   [Maxwell, Pascal, Volta] │"
+    echo -e "\t│ [3] nvidia-470xx-dkms                   [Kepler] │"
+    echo -e "\t│ [4] nvidia-390xx-dkms                    [Fermi] │"
+    echo -e "\t│ [5] nvidia-340xx-dkms                    [Tesla] │"
+    echo -e "\t│                                                  │"
+    echo -e "\t├──────────────────────────────────────────────────┤"
+    echo -e "\t│ [0] Quit                                         │"
+    echo -e "\t└──────────────────────────────────────────────────┘"
+    echo -e ""
+    echo -e "\t${green}Choose a menu option using your keyboard [1,2,...,0]${reset}"
+
+    read -rsn1 option
+
+    case "${option}" in
+    "1")
+        gpuDriver="nvidia-open-dkms"
+        ;;
+    "2")
+        gpuDriver="nvidia-580xx-dkms"
+        ;;
+    "3")
+        gpuDriver="nvidia-470xx-dkms"
+        ;;
+    "4")
+        gpuDriver="nvidia-390xx-dkms"
+        ;;
+    "5")
+        gpuDriver="nvidia-340xx-dkms"
+        ;;
+    "0")
+        exitScript "Quit."
+        ;;
+    *)
+        chooseGpuDriver
+        ;;
+    esac
+}
+
+backupConfig() {
+    local config="$1"
+    logMessage "info" "Creating backup of ${config}"
+    sudo cp "${config}" "${config}.bak"
+    logMessage "info" "Backup of ${config} created."
+}
+
+showMenu() {
+    clear
+    echo -e "\t┌──────────────────────────────────────────────────┐"
+    echo -e "\t│                                                  │"
+    echo -e "\t│ Choose option:                                   │"
+    echo -e "\t│                                                  │"
+    echo -e "\t│ [1] Install                                      │"
+    echo -e "\t│ [2] Uninstall                                    │"
+    echo -e "\t│ [3] Device Information                           │"
+    echo -e "\t│ [4] About Nvidiainstall                          │"
+    echo -e "\t│                                                  │"
+    echo -e "\t├──────────────────────────────────────────────────┤"
+    echo -e "\t│ [0] Quit                                         │"
+    echo -e "\t└──────────────────────────────────────────────────┘"
+    echo -e ""
+    echo -e "\t${green}Choose a menu option using your keyboard [1,2,...,0]${reset}"
+
+    read -rsn1 option
+
+    case "${option}" in
+    "1")
+        if [[ ${installedDriver} == "none" ]]; then
+            confirmInstallation
+        else
+            showDriverInstalled
+        fi
+        ;;
+    "2")
+        if [[ ${installedDriver} == "none" ]]; then
+            showNoDriverInstalled
+        else
+            confirmUninstallation
+        fi
+        ;;
+    "3")
+        showDeviceInformation
+        ;;
+    "4")
+        showAbout
+        ;;
+    "0")
+        exitScript "Quit."
+        ;;
+    *)
+        showMenu
+        ;;
+    esac
+
+    showMenu
+}
+
+showDeviceInformation() {
+    clear
+    echo -e ""
+    echo -e "\tDevice Information:"
+    echo -e ""
+    echo -e "\tDetected GPU: ${gpuName}"
+    echo -e "\tGeneration: ${gpuGen}"
+    echo -e "\tInstalled Driver: ${installedDriver}"
+    echo -e ""
+    echo -e "\tSelected Driver: ${gpuDriver}"
+    echo -e "\tLegacy Mode: ${_nv_legacy_mode}"
+    echo -e ""
+    echo -e "\t${green}Press any button to return${reset}"
+
+    read -rsn1 option
+
+    case "${option}" in
+    *) ;;
+    esac
+}
+
+showAbout() {
+    githubResponse=$(curl -s "https://api.github.com/repos/Justus0405/Nvidiainstall/contributors")
+    clear
+    echo -e ""
+    echo -e "\tAbout Nvidiainstall:"
+    echo -e ""
+    echo -e "\tVersion: ${_nv_script_version}"
+    echo -e "\tAuthor : Justus0405"
+    echo -e "\tSource : https://github.com/Justus0405/Nvidiainstall"
+    echo -e "\tLicense: MIT"
+    echo -e "\tContributors:"
+
+    echo "${githubResponse}" | grep '"login":' | awk -F '"' '{print $4}' | while read -r contributors; do
+        echo -e "\t\t\e[0;35m${contributors}\e[m"
+    done
+
+    echo -e ""
+    echo -e "\t${green}Press any button to return${reset}"
+
+    read -rsn1 option
+
+    case "${option}" in
+    *) ;;
+    esac
+}
+
+showDriverInstalled() {
+    clear
+    echo -e "\t┌──────────────────────────────────────────────────┐"
+    echo -e "\t│    / \                                           │"
+    echo -e "\t│   / | \     You already have other NVIDIA dkms   │"
+    echo -e "\t│  /  #  \    packages Installed!                  │"
+    echo -e "\t│ /_______\                                        │"
+    echo -e "\t└──────────────────────────────────────────────────┘"
+    echo -e ""
+    echo -e "\tInstalled Package: ${installedDriver}"
+    echo -e ""
+    echo -e "\t${green}Press any button to return${reset}"
+
+    read -rsn1 option
+
+    case "${option}" in
+    *) ;;
+    esac
+}
+
+showNoDriverInstalled() {
+    clear
+    echo -e "\t┌──────────────────────────────────────────────────┐"
+    echo -e "\t│    / \                                           │"
+    echo -e "\t│   / | \     We could not find any installed      │"
+    echo -e "\t│  /  #  \    NVIDIA dkms packages!                │"
+    echo -e "\t│ /_______\                                        │"
+    echo -e "\t└──────────────────────────────────────────────────┘"
+    echo -e ""
+    echo -e "\t${green}Press any button to return${reset}"
+
+    read -rsn1 option
+
+    case "${option}" in
+    *) ;;
+    esac
+}
+
+confirmInstallation() {
+    clear
+    echo -e "\t┌──────────────────────────────────────────────────┐"
+    echo -e "\t│    / \                                           │"
+    echo -e "\t│   / | \     This script will install NVIDIA      │"
+    echo -e "\t│  /  #  \    drivers and modify system            │"
+    echo -e "\t│ /_______\   configurations.                      │"
+    echo -e "\t│                                                  │"
+    echo -e "\t│ [!] Proceed with caution!                        │"
+    echo -e "\t└──────────────────────────────────────────────────┘"
+    echo -e ""
+    read -rp "Do you want to install ${gpuDriver}? (y/N): " confirm
+    case "${confirm}" in
+    [yY][eE][sS] | [yY])
+        echo -e "${green}Installing ${gpuDriver}...${reset}"
+        installationSteps
+        ;;
+    *)
+        exitScript "Installation cancelled."
+        ;;
+    esac
+}
+
+installationSteps() {
+    updateSystem
+    checkKernelHeaders
+    installNvidiaPackages
+    configureMkinitcpio
+    configureModprobe
+    configureGrubDefault
+    regenerateInitramfs
+    updateGrubConfig
+    confirmReboot
+}
+
+updateSystem() {
+    logMessage "info" "Updating System..."
+    sudo pacman -Syyu --noconfirm
+    logMessage "info" "Updated System."
+}
+
+checkKernelHeaders() {
+    logMessage "info" "Installing Kernel Modules..."
+    kernel=$(uname -r)
+    if [[ "${kernel}" == *"zen"* ]]; then
+        logMessage "info" "Detected Kernel: linux-zen"
+        sudo pacman -S --needed --noconfirm linux-zen-headers
+    elif [[ "${kernel}" == *"lts"* ]]; then
+        logMessage "info" "Detected Kernel: linux-lts"
+        sudo pacman -S --needed --noconfirm linux-lts-headers
+    elif [[ "$kernel" == *"hardened"* ]]; then
+        logMessage "info" "Detected Kernel: linux-hardened"
+        sudo pacman -S --needed --noconfirm linux-hardened-headers
+    else
+        logMessage "info" "Detected Kernel: linux"
+        sudo pacman -S --needed --noconfirm linux-headers
+    fi
+    logMessage "info" "Installed Kernel Modules."
+}
+
+installNvidiaPackages() {
+    logMessage "info" "Identified Generation: ${gpuGen}"
+    logMessage "info" "Installing ${gpuDriver} and dependencies..."
+
+    case "${gpuDriver}" in
+    "nvidia-open-dkms")
+        sudo pacman -S --needed --noconfirm nvidia-open-dkms nvidia-utils opencl-nvidia nvidia-settings libglvnd lib32-nvidia-utils lib32-opencl-nvidia egl-wayland
+        ;;
+    "nvidia-580xx-dkms")
+        if [[ "${_nv_legacy_mode}" == "true" ]]; then
+            checkAurHelper
+            aurHelperInstall "nvidia-580xx-dkms nvidia-580xx-utils opencl-nvidia-580xx nvidia-580xx-settings libglvnd lib32-nvidia-580xx-utils lib32-opencl-nvidia-580xx egl-wayland"
+        else
+            checkChaoticAur
+            sudo pacman -S --needed --noconfirm nvidia-580xx-dkms nvidia-580xx-utils opencl-nvidia-580xx nvidia-580xx-settings libglvnd lib32-nvidia-580xx-utils lib32-opencl-nvidia-580xx egl-wayland
+        fi
+        ;;
+    "nvidia-470xx-dkms")
+        if [[ "${_nv_legacy_mode}" == "true" ]]; then
+            checkAurHelper
+            aurHelperInstall "nvidia-470xx-dkms nvidia-470xx-utils opencl-nvidia-470xx nvidia-470xx-settings libglvnd lib32-nvidia-470xx-utils lib32-opencl-nvidia-470xx egl-wayland"
+        else
+            checkChaoticAur
+            sudo pacman -S --needed --noconfirm nvidia-470xx-dkms nvidia-470xx-utils opencl-nvidia-470xx nvidia-470xx-settings libglvnd lib32-nvidia-470xx-utils lib32-opencl-nvidia-470xx egl-wayland
+        fi
+        ;;
+    "nvidia-390xx-dkms")
+        if [[ "${_nv_legacy_mode}" == "true" ]]; then
+            checkAurHelper
+            aurHelperInstall "nvidia-390xx-dkms nvidia-390xx-utils opencl-nvidia-390xx nvidia-390xx-settings libglvnd lib32-nvidia-390xx-utils lib32-opencl-nvidia-390xx egl-wayland"
+        else
+            checkChaoticAur
+            sudo pacman -S --needed --noconfirm nvidia-390xx-dkms nvidia-390xx-utils opencl-nvidia-390xx nvidia-390xx-settings libglvnd lib32-nvidia-390xx-utils lib32-opencl-nvidia-390xx egl-wayland
+        fi
+        ;;
+    "nvidia-340xx-dkms")
+        if [[ "${_nv_legacy_mode}" == "true" ]]; then
+            checkAurHelper
+            aurHelperInstall "nvidia-340xx-dkms nvidia-340xx-utils opencl-nvidia-340xx libglvnd lib32-nvidia-340xx-utils lib32-opencl-nvidia-340xx egl-wayland"
+        else
+            checkChaoticAur
+            sudo pacman -S --needed --noconfirm nvidia-340xx-dkms nvidia-340xx-utils opencl-nvidia-340xx libglvnd egl-wayland
+        fi
+        ;;
+    *)
+        logMessage "error" "No package provided for installation."
+        ;;
+    esac
+
+    logMessage "info" "Successfully installed ${gpuDriver} and dependencies."
+}
+
+configureMkinitcpio() {
+    local config="/etc/mkinitcpio.conf"
+    backupConfig "${config}"
+    logMessage "info" "Configuring ${config}..."
+
+    logMessage "info" "Cleaning up ${config}..."
+    sudo sed -i '/^#/d;/^$/d' "${config}"
+
+    sudo sed -i 's/\b\(nvidia\|nvidia_modeset\|nvidia_uvm\|nvidia_drm\)\b//g' "${config}"
+
+    logMessage "info" "Cleaning up brackets..."
+    sudo sed -i 's/ ( /(/g; s/ )/)/g; s/( */(/; s/ *)/)/; s/ \+/ /g' "${config}"
+
+    logMessage "info" "Adding NVIDIA modules..."
+    if [[ ${gpuDriver} == "nvidia-340xx-dkms" ]]; then
+        sudo sed -i 's/^MODULES=(\([^)]*\))/MODULES=(\1 nvidia nvidia_uvm)/' "${config}"
+    else
+        sudo sed -i 's/^MODULES=(\([^)]*\))/MODULES=(\1 nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' "${config}"
+    fi
+
+    logMessage "info" "Cleaning up brackets..."
+    sudo sed -i 's/ ( /(/g; s/ )/)/g; s/( */(/; s/ *)/)/; s/ \+/ /g' "${config}"
+
+    logMessage "info" "Removing kms hook..."
+    sudo sed -i 's/\bkms \b//g' "${config}"
+
+    logMessage "info" "Configured ${config}."
+}
+
+configureModprobe() {
+    local config="/etc/modprobe.d/nvidia.conf"
+    backupConfig "${config}"
+    logMessage "info" "Configuring ${config}..."
+
+    echo "options nvidia_drm modeset=1 fbdev=1" | sudo tee "${config}" >/dev/null
+    logMessage "info" "Configured ${config}."
+}
+
+configureGrubDefault() {
+    local config="/etc/default/grub"
+    backupConfig "${config}"
+    logMessage "info" "Configuring ${config}..."
+
+    sudo sed -i 's/nvidia_drm\.modeset=1//g' "${config}"
+
+    logMessage "info" "Adding NVIDIA modeset to ${config}..."
+    sudo sed -i '/GRUB_CMDLINE_LINUX_DEFAULT=/!b;/nvidia_drm.modeset=1/!s/\(GRUB_CMDLINE_LINUX_DEFAULT="[^"]*\)/\1 nvidia_drm.modeset=1/' "${config}"
+    logMessage "info" "Configured ${config}."
+}
+
+regenerateInitramfs() {
+    logMessage "info" "Regenerating initramfs... (this may take a while)"
+    sudo mkinitcpio -P || logMessage "error" "Failed to regenerate the initramfs."
+    logMessage "info" "Regernerated initramfs."
+}
+
+updateGrubConfig() {
+    local config="/boot/grub/grub.cfg"
+    backupConfig "${config}"
+    logMessage "info" "Configuring ${config}..."
+
+    sudo grub-mkconfig -o "${config}" || logMessage "error" "Failed to update ${config}."
+    logMessage "info" "Configured ${config}"
+}
+
+confirmReboot() {
+    echo -e ""
+    echo -e "${green}Action complete.${reset}"
+    read -rp "Would you like to reboot now? (y/N): " rebootNow
+    case "${rebootNow}" in
+    [yY][eE][sS] | [yY])
+        sudo reboot now
+        ;;
+    *)
+        logMessage "info" "Please reboot your system later to apply changes."
+        echo -e ""
+        echo -e "\t${green}Press any button to return${reset}"
+
+        read -rsn1 option
+
+        case "${option}" in
+        *) ;;
+        esac
+        ;;
+    esac
+}
+
+confirmUninstallation() {
+    clear
+    echo -e "\t┌──────────────────────────────────────────────────┐"
+    echo -e "\t│    / \                                           │"
+    echo -e "\t│   / | \     This script will ${red}uninstall${reset} NVIDIA    │"
+    echo -e "\t│  /  #  \    drivers and modify system            │"
+    echo -e "\t│ /_______\   configurations.                      │"
+    echo -e "\t│                                                  │"
+    echo -e "\t│ [!] Proceed with caution!                        │"
+    echo -e "\t└──────────────────────────────────────────────────┘"
+    echo -e ""
+    read -rp "Do you want to uninstall ${installedDriver}? (y/N): " confirm
+    case "${confirm}" in
+    [yY][eE][sS] | [yY])
+        echo -e "${green}Uninstalling ${installedDriver}...${reset}"
+        uninstallationSteps
+        ;;
+    *)
+        exitScript "Uninstallation cancelled."
+        ;;
+    esac
+}
+
+uninstallationSteps() {
+    removeNvidiaPackages
+    removeMkinitcpio
+    removeModprobe
+    removeGrubDefault
+    regenerateInitramfs
+    updateGrubConfig
+    confirmReboot
+}
+
+removeNvidiaPackages() {
+    logMessage "info" "Uninstalling ${installedDriver}..."
+
+    case "${installedDriver}" in
+    "nvidia")
+        sudo pacman -R --noconfirm nvidia
+        ;;
+    "nvidia-open-dkms")
+        sudo pacman -R --noconfirm nvidia-open-dkms
+        ;;
+    "nvidia-580xx-dkms")
+        if [[ "${_nv_legacy_mode}" == "true" ]]; then
+            checkAurHelper
+            aurHelperUninstall "nvidia-580xx-dkms"
+        else
+            checkChaoticAur
+            sudo pacman -R --noconfirm nvidia-580xx-dkms
+        fi
+        ;;
+    "nvidia-470xx-dkms")
+        if [[ "${_nv_legacy_mode}" == "true" ]]; then
+            checkAurHelper
+            aurHelperUninstall "nvidia-470xx-dkms"
+        else
+            checkChaoticAur
+            sudo pacman -R --noconfirm nvidia-470xx-dkms
+        fi
+        ;;
+    "nvidia-390xx-dkms")
+        if [[ "${_nv_legacy_mode}" == "true" ]]; then
+            checkAurHelper
+            aurHelperUninstall "nvidia-390xx-dkms"
+        else
+            checkChaoticAur
+            sudo pacman -R --noconfirm nvidia-390xx-dkms
+        fi
+        ;;
+    "nvidia-340xx-dkms")
+        if [[ "${_nv_legacy_mode}" == "true" ]]; then
+            checkAurHelper
+            aurHelperUninstall "nvidia-340xx-dkms"
+        else
+            checkChaoticAur
+            sudo pacman -R --noconfirm nvidia-340xx-dkms
+        fi
+        ;;
+    *)
+        logMessage "error" "No package provided for uninstallation."
+        ;;
+    esac
+
+    logMessage "info" "Successfully uninstalled ${installedDriver}."
+}
+
+removeMkinitcpio() {
+    local config="/etc/mkinitcpio.conf"
+    backupConfig "${config}"
+    logMessage "info" "Configuring ${config}..."
+
+    logMessage "info" "Cleaning up ${config} structure..."
+    sudo sed -i '/^#/d;/^$/d' "${config}"
+
+    logMessage "info" "Removing NVIDIA modules..."
+    sudo sed -i 's/\b\(nvidia\|nvidia_modeset\|nvidia_uvm\|nvidia_drm\)\b//g' "${config}"
+
+    sudo sed -i 's/ ( /(/g; s/ )/)/g; s/( */(/; s/ *)/)/; s/ \+/ /g' "${config}"
+
+    sudo sed -i 's/\bkms \b//g' "${config}"
+
+    logMessage "info" "Adding kms hook..."
+    sudo sed -i 's/modconf/& kms/' "${config}"
+
+    logMessage "info" "Configured ${config}."
+}
+
+removeModprobe() {
+    local config="/etc/modprobe.d/nvidia.conf"
+    backupConfig "${config}"
+    logMessage "info" "Deleting ${config}..."
+
+    sudo rm -f "${config}" || logMessage "warning" "Failed to delete NVIDIA modprobe file."
+    logMessage "info" "Deleted ${config}."
+}
+
+removeGrubDefault() {
+    local config="/etc/default/grub"
+    backupConfig "${config}"
+    logMessage "info" "Configuring ${config}..."
+
+    sudo sed -i 's/nvidia_drm\.modeset=1//g' "${config}"
+    logMessage "info" "Configured ${config}."
+}
+
+exitScript() {
+    local message="$1"
+    echo -e ""
+    echo -e "${red}${message}${reset}"
+    exit 0
+}
+
+install_nvidia_drivers() {
+  echo
+  read -rp "$(echo -e "${YELLOW}?${NC}  Install NVIDIA Drivers? [y/N] ")" ans
+  [[ "${ans,,}" != "y" ]] && return
+
+  info "Launching NVIDIA driver installer…"
+  # Run in a subshell so internal exit calls don't terminate install.sh
+  (
+    trap 'exitScript "Aborted!"' SIGINT
+    checkNvidia
+    checkInstalledDriver
+    showMenu
+  ) || warn "NVIDIA installer exited with an error — you can rerun it separately."
+  success "NVIDIA driver installer finished"
 }
 
 # ── main ──────────────────────────────────────────────────────────────────────
@@ -393,12 +987,12 @@ main() {
 
   install_yay
   install_packages
-  install_gpu_drivers
   install_omz
   copy_configs
   set_zsh_default
   setup_wallpaper_dir
   setup_xdg
+  install_nvidia_drivers
   install_spotify
   install_sddm_theme
 
@@ -407,10 +1001,6 @@ main() {
   echo -e "  • Log out and select Hyprland from your display manager to start."
   echo -e "  • Place your wallpaper at ${BOLD}~/Pictures/Wallpaper/wallpaper.png${NC}."
   echo -e "  • Any previous configs were backed up with a ${BOLD}.bak.TIMESTAMP${NC} suffix."
-
-  echo
-  read -rp "$(echo -e "${YELLOW}?${NC}  Reboot now? [y/N] ")" ans
-  [[ "${ans,,}" == "y" ]] && sudo reboot
 }
 
 main "$@"
