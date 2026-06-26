@@ -48,6 +48,7 @@
 | Spotify | Spicetify (Catppuccin) |
 | Multiplexer | tmux (Catppuccin plugin) |
 | Font | Fira Code |
+| Display Manager | SDDM (sddm-astronaut-theme) |
 
 ---
 
@@ -89,10 +90,10 @@ chmod +x install.sh
 ## Manual installation
 
 **Install yay**
-  
+
   The repo for yay https://github.com/jguer/yay
-  
-```bash 
+
+```bash
 # you need to install yay AUR helper to install the packages below
 sudo pacman -Syu && sudo pacman -S --needed git base-devel
 git clone https://aur.archlinux.org/yay.git
@@ -168,6 +169,12 @@ Zsh is configured with:
 
 [Fira Code](https://github.com/tonsky/FiraCode) is used across the terminal and editor. Install it from your distro's package manager or Nerd Fonts.
 
+---
+
+## Credits
+
+- **[sddm-astronaut-theme](https://github.com/Keyitdev/sddm-astronaut-theme)** by [Keyitdev](https://github.com/Keyitdev) — the SDDM login theme used by the optional installer.
+- **[Nvidiainstall](https://github.com/Justus0405/Nvidiainstall)** by [Justus0405](https://github.com/Justus0405) - the auto bash script for installing Nvidia GPU drivers
 ---
 
 <div align="center">
