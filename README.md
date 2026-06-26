@@ -4,7 +4,7 @@
 
 # hyprland-dots
 
-**A cozy Catppuccin Mocha Hyprland configuration**
+**A cozy Catppuccin Mocha Hyprland configuration made for archlinux**
 
 ![Hyprland](https://img.shields.io/badge/Hyprland-89b4fa?style=for-the-badge&logo=linux&logoColor=1e1e2e)
 ![Catppuccin](https://img.shields.io/badge/Catppuccin-Mocha-cba6f7?style=for-the-badge&logoColor=1e1e2e)
