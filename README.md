@@ -174,7 +174,6 @@ Zsh is configured with:
 ## Credits
 - **[catppuccin-mocha](https://github.com/catppuccin/catppuccin)** by [catppuccin](https://github.com/catppuccin) - the color palette and many configs for this dot files.
 - **[sddm-astronaut-theme](https://github.com/Keyitdev/sddm-astronaut-theme)** by [Keyitdev](https://github.com/Keyitdev) — the SDDM login theme used by the optional installer.
-- **[Nvidiainstall](https://github.com/Justus0405/Nvidiainstall)** by [Justus0405](https://github.com/Justus0405) - the auto bash script for installing Nvidia GPU drivers.
 ---
 
 <div align="center">
