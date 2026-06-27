@@ -8,24 +8,31 @@ BLUE='\033[0;34m'
 BOLD='\033[1m'
 NC='\033[0m'
 
-info()    { echo -e "${BLUE}::${NC} $*"; }
+info() { echo -e "${BLUE}::${NC} $*"; }
 success() { echo -e "${GREEN}✓${NC}  $*"; }
-warn()    { echo -e "${YELLOW}!${NC}  $*"; }
-die()     { echo -e "${RED}✗${NC}  $*" >&2; exit 1; }
+warn() { echo -e "${YELLOW}!${NC}  $*"; }
+die() {
+  echo -e "${RED}✗${NC}  $*" >&2
+  exit 1
+}
 
 [[ "$(uname -s)" == "Linux" ]] || die "This script is for Arch Linux only."
-command -v pacman &>/dev/null    || die "pacman not found — is this Arch Linux?"
+command -v pacman &>/dev/null || die "pacman not found — is this Arch Linux?"
 
 echo -e "\n${BOLD}${RED}Hyprland Dotfiles — FULL Uninstall${NC}\n"
 warn "This will remove ALL installed packages including NVIDIA drivers and yay,"
 warn "revert system config files, and delete all copied dotfiles."
 echo
 read -rp "$(echo -e "${RED}!${NC}  Type YES to continue: ")" ans
-[[ "$ans" == "YES" ]] || { info "Aborted."; exit 0; }
+[[ "$ans" == "YES" ]] || {
+  info "Aborted."
+  exit 0
+}
 
 # ── helper: remove packages that are actually installed ───────────────────────
 remove_if_installed() {
-  local manager="$1"; shift
+  local manager="$1"
+  shift
   local -a candidates=("$@")
   local -a present=()
   for pkg in "${candidates[@]}"; do
@@ -66,22 +73,12 @@ remove_optional_packages() {
   success "Optional packages removed"
 }
 
-# ── 3. nvidia drivers ─────────────────────────────────────────────────────────
+# ── 3. nvidia packages ───────────────────────────────────────────────────────
 remove_nvidia_packages() {
-  info "Removing NVIDIA driver packages…"
+  info "Removing NVIDIA packages…"
   remove_if_installed pacman \
-    nvidia nvidia-open-dkms nvidia-dkms \
-    nvidia-utils lib32-nvidia-utils \
-    nvidia-settings opencl-nvidia lib32-opencl-nvidia \
-    nvidia-580xx-dkms nvidia-580xx-utils lib32-nvidia-580xx-utils \
-    opencl-nvidia-580xx lib32-opencl-nvidia-580xx nvidia-580xx-settings \
-    nvidia-470xx-dkms nvidia-470xx-utils lib32-nvidia-470xx-utils \
-    opencl-nvidia-470xx lib32-opencl-nvidia-470xx nvidia-470xx-settings \
-    nvidia-390xx-dkms nvidia-390xx-utils lib32-nvidia-390xx-utils \
-    opencl-nvidia-390xx lib32-opencl-nvidia-390xx nvidia-390xx-settings \
-    nvidia-340xx-dkms nvidia-340xx-utils lib32-nvidia-340xx-utils \
-    opencl-nvidia-340xx lib32-opencl-nvidia-340xx \
-    egl-wayland
+    nvidia nvidia-dkms nvidia-utils nvidia-settings \
+    lib32-nvidia-utils nvidia-open nvidia-open-dkms
   success "NVIDIA packages removed"
 }
 
