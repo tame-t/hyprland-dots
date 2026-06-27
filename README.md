@@ -153,6 +153,23 @@ cp .gtkrc-2.0 ~/
 ---
 ## If you pc broken call teha
 
+## Uninstall
+
+```bash
+git clone https://github.com/tame-t/hyprland-dots
+cd ~/hyprland-dots
+chmod +x uninstall.sh
+./uninstall.sh
+```
+
+**Fulluninstall**
+```bash
+git clone https://github.com/tame-t/hyprland-dots
+cd ~/hyprland-dots
+chmod +x fulluninstall.sh
+./fulluninstall.sh
+```
+
 ## Shell
 
 Zsh is configured with:
