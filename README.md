@@ -191,6 +191,7 @@ Zsh is configured with:
 ## Credits
 - **[catppuccin-mocha](https://github.com/catppuccin/catppuccin)** by [catppuccin](https://github.com/catppuccin) - the color palette and many configs for this dot files.
 - **[sddm-astronaut-theme](https://github.com/Keyitdev/sddm-astronaut-theme)** by [Keyitdev](https://github.com/Keyitdev) — the SDDM login theme used by the optional installer.
+- **[yay](https://github.com/jguer/yay)** by [Jguer](https://github.com/Jguer) - the AUR helper that was used in the install.sh.
 ---
 
 <div align="center">
