@@ -32,7 +32,7 @@
 
 | Role | App |
 |---|---|
-| Compositor | Hyprland |
+| WM | Hyprland |
 | Terminal | Kitty |
 | Shell | Zsh + oh-my-zsh |
 | Bar | Waybar |
@@ -46,7 +46,7 @@
 | Screenshot | Swappy |
 | Wallpaper | awww |
 | Spotify | Spicetify (Catppuccin) |
-| Multiplexer | tmux (Catppuccin plugin) |
+| Terminal Multiplexer | tmux (Catppuccin plugin) |
 | Font | Fira Code |
 | Display Manager | SDDM (sddm-astronaut-theme) |
 
