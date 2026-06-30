@@ -2,7 +2,7 @@
 
 <img src="https://raw.githubusercontent.com/catppuccin/catppuccin/main/assets/logos/exports/1544x1544_circle.png" width="100" />
 
-# hyprland-dots **(this repo is not finished)**
+# hyprland-dots
 
 **A cozy Catppuccin Mocha Hyprland configuration made for archlinux**
 
